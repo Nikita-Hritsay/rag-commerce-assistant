@@ -1,0 +1,14 @@
+curl -X POST http://localhost:8080/api/sellers \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test Seller"}'
+
+
+
+curl -X POST "http://localhost:8080/api/import/<SELLER_ID>/products" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@/path/to/products.csv"
+
+
+
+docker exec -it rag_postgres psql -U rag_user -d rag_db -c "SELECT id, name FROM seller LIMIT 10;"
+docker exec -it rag_postgres psql -U rag_user -d rag_db -c "SELECT seller_id, sku, title, price FROM product LIMIT 10;"
