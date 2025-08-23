@@ -25,12 +25,13 @@
 
 ```mermaid
 flowchart TD
-    A[Seller Web (Java)] -->|Upload Excel/CSV| B[(MySQL/Postgres + pgvector)]
+    A[Seller Web (Java)] -- Upload Excel/CSV --> B[(MySQL/Postgres + pgvector)]
+    A -- Reports --> B
+
     B --> C[AI Gateway (Python)]
     C --> D[(Vector DB: Qdrant/pgvector)]
     C --> E[Telegram Bot (Python)]
     C --> F[n8n Workflows]
-    
-    A -->|Reports| B
-    E -->|Customer Chat| C
-    F -->|ETL/Cron/Integrations| C
+
+    E -- Customer Chat --> C
+    F -- ETL/Cron/Integrations --> C
