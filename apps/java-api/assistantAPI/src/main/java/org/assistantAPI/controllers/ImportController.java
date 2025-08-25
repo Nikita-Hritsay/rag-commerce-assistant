@@ -28,8 +28,8 @@ public class ImportController {
     private final UserService userService;
 
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<Map<String,Object>> importCsv(@RequestPart("file") MultipartFile file, Authentication authentication) throws IOException {
-        int ok=0, failed=0;
+    public ResponseEntity<Map<String, Object>> importCsv(@RequestPart("file") MultipartFile file, Authentication authentication) throws IOException {
+        int ok = 0, failed = 0;
         try (var reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             String usernameOrEmail = authentication.getName();
             User user = userService.findByEmail(usernameOrEmail);
@@ -44,9 +44,9 @@ public class ImportController {
             for (CSVRecord r : csv) {
                 try {
                     String[] data = r.values()[0].split(";");
-                    var sku   = data[0];
+                    var sku = data[0];
                     var title = data[1];
-                    var desc  = data[2];
+                    var desc = data[2];
                     var price = Double.parseDouble(data[3]);
                     var currency = data[4];
 
