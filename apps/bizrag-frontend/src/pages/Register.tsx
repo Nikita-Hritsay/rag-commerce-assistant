@@ -5,6 +5,8 @@ import axios from '../lib/axios'
 const Register: React.FC = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [address, setAddress] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,7 +18,7 @@ const Register: React.FC = () => {
     setLoading(true)
 
     try {
-      await axios.post('/auth/register', { name, email, password })
+      await axios.post('/api/users/register', { name, email, password, phone, address })
       navigate('/login')
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed')
@@ -45,6 +47,22 @@ const Register: React.FC = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="field">
+            <label>Phone:</label>
+            <input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+          </div>
+          <div className="field">
+            <label>Address:</label>
+            <input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               required
             />
           </div>

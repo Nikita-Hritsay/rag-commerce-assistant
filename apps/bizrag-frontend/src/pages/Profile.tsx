@@ -17,7 +17,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get('/users/me')
+        const response = await axios.get('/api/users/me')
         setUser(response.data)
       } catch (err) {
         console.error('Failed to fetch user:', err)

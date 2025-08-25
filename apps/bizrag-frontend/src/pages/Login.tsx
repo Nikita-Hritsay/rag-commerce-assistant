@@ -4,7 +4,7 @@ import axios from '../lib/axios'
 import { setToken } from '../lib/auth'
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,10 +16,10 @@ const Login: React.FC = () => {
     setLoading(true)
 
     try {
-      const response = await axios.post('/api/users/login', { email, password })
-      const { accessToken } = response.data
+      const response = await axios.post('/api/users/login', { username, password })
+      const accessToken = response.data.jwtToken
       setToken(accessToken)
-      navigate('/app/upload')
+      navigate('/app/profile')
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed')
     } finally {
@@ -36,8 +36,8 @@ const Login: React.FC = () => {
             <label>Email:</label>
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>

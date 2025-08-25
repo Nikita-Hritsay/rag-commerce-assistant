@@ -6,4 +6,5 @@ import org.assistantAPI.dto.CreateUserRequest;
 public interface UserService {
     public User createUser(CreateUserRequest createUserRequest);
     public User findById(Long id);
+    public User findByEmail(String email);
 }

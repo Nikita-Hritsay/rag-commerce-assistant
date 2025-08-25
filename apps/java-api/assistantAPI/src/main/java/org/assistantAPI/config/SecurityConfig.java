@@ -22,7 +22,6 @@ import java.util.Arrays;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@Profile("!prod")
 public class SecurityConfig {
 
     @Bean
@@ -31,7 +30,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.configurationSource(request -> {
                     var cfg = new CorsConfiguration();
-                    cfg.setAllowedOrigins(Arrays.asList("http://localhost:5173","http://localhost:3000","http://localhost:4200"));
+                    cfg.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
                     cfg.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
                     cfg.setAllowedHeaders(Arrays.asList("*"));
                     cfg.setAllowCredentials(true);
@@ -46,7 +45,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/login", "/api/users/register").permitAll()
-                        .requestMatchers("/api/users/**").hasAuthority("USER")
+                        .anyRequest().hasAuthority("USER")
                 )
                 .httpBasic(httpBasic -> {})
                 .formLogin(withDefaults());
@@ -77,7 +76,7 @@ public class SecurityConfig {
                 new RagAPIsernamePwdAuthenticationProvider(userDetailsService, passwordEncoder);
         ProviderManager providerManager = new ProviderManager(authenticationProvider);
         providerManager.setEraseCredentialsAfterAuthentication(false);
-        return  providerManager;
+        return providerManager;
     }
 
 }
