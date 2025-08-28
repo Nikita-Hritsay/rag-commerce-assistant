@@ -8,5 +8,5 @@ import java.util.*;
 
 @Repository
 public interface ProductRepo extends JpaRepository<Product, UUID> {
-    Optional<Product> findBySellerIdAndSku(UUID sellerId, String sku);
+    Optional<Product> findBySellerIdAndSku(Long sellerId, String sku);
 }

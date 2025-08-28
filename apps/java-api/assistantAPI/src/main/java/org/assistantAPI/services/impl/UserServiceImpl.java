@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.assistantAPI.domain.Authority;
 import org.assistantAPI.domain.User;
 import org.assistantAPI.dto.CreateUserRequest;
-import org.assistantAPI.repository.AuthorityRepository;
 import org.assistantAPI.repository.UserRepository;
 import org.assistantAPI.services.AuthorityService;
 import org.assistantAPI.services.UserService;
@@ -47,5 +46,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
 }

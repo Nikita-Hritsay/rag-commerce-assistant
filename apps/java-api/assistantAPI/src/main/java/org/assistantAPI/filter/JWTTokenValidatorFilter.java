@@ -40,6 +40,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                            ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
                    SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
                    if(null !=secretKey) {
+                       jwt = jwt.replace("Bearer ", "");
                        Claims claims = Jwts.parser().verifyWith(secretKey)
                                 .build().parseSignedClaims(jwt).getPayload();
                        String username = String.valueOf(claims.get("username"));
@@ -54,7 +55,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                throw new BadCredentialsException("Invalid Token received!");
            }
        }
-        filterChain.doFilter(request,response);
+       filterChain.doFilter(request,response);
     }
 
     @Override

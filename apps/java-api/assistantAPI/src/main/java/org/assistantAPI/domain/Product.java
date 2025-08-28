@@ -12,7 +12,7 @@ public class Product {
     @Id private UUID id;
 
     @Column(name="seller_id", nullable=false)
-    private UUID sellerId;
+    private Long sellerId;
 
     @Column(nullable=false) private String sku;
     @Column(nullable=false) private String title;
