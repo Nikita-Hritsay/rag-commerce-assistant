@@ -21,6 +21,8 @@ public class Product {
     private String currency;
     @Column(name="updated_at") private OffsetDateTime updatedAt;
 
+    private Integer quantity;
+
     @PrePersist void pre() {
         if (id==null) id = UUID.randomUUID();
         if (currency==null) currency = "UAH";

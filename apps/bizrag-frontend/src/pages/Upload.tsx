@@ -19,7 +19,7 @@ const Upload: React.FC = () => {
       const formData = new FormData()
       formData.append('file', file)
 
-      const response = await axios.post('/api/import', formData, {
+      const response = await axios.post('/api/product', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

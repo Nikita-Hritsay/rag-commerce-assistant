@@ -6,12 +6,15 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Upload from './pages/Upload'
 import Profile from './pages/Profile'
+import Products from './pages/Products'
+import { Link } from 'react-router-dom'
 
 const AppHeader: React.FC = () => (
   <header className="app-header">
     <nav>
-      <a href="/app/upload">Upload</a>
-      <a href="/app/profile">Profile</a>
+      <Link to="/app/upload">Upload</Link>
+      <Link to="/app/profile">Profile</Link>
+      <Link to="/app/products">Products</Link>
       <button onClick={() => {
         localStorage.removeItem('bizrag.accessToken')
         window.location.href = '/login'
@@ -53,6 +56,14 @@ const AppRouter: React.FC = () => {
             <Profile />
           </ProtectedLayout>
         } />
+       <Route
+          path="/app/products"
+          element={
+            <ProtectedLayout>
+              <Products />
+            </ProtectedLayout>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )
