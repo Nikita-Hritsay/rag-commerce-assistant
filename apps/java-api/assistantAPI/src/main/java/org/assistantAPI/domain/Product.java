@@ -20,6 +20,8 @@ public class Product {
     private Double price;
     private String currency;
     @Column(name="updated_at") private OffsetDateTime updatedAt;
+    private String model;
+    private int memory;
 
     private Integer quantity;
 
@@ -27,5 +29,21 @@ public class Product {
         if (id==null) id = UUID.randomUUID();
         if (currency==null) currency = "UAH";
         if (updatedAt==null) updatedAt = OffsetDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", sellerId=" + sellerId +
+                ", sku='" + sku + '\'' +
+                ", title='" + title + '\'' +
+                ", model='" + model + '\'' +
+                ", memory=" + memory +
+                ", price=" + price +
+                ", currency='" + currency + '\'' +
+                ", quantity=" + quantity +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

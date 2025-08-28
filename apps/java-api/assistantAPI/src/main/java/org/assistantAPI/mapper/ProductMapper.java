@@ -1,11 +1,12 @@
 package org.assistantAPI.mapper;
 
+import lombok.experimental.UtilityClass;
 import org.assistantAPI.domain.Product;
 import org.assistantAPI.dto.ProductDto;
 import org.assistantAPI.dto.UpdateProductRequest;
 
+@UtilityClass
 public class ProductMapper {
-    private ProductMapper(){}
 
     public static ProductDto toDto(Product p) {
         return new ProductDto(

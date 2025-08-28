@@ -10,7 +10,6 @@ const axiosInstance = axios.create({
   },
 })
 
-// Request interceptor to add auth token
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = getToken()
@@ -22,7 +21,6 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-// Response interceptor to handle 401s
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {

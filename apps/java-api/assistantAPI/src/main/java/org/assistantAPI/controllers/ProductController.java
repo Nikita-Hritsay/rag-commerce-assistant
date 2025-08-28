@@ -85,13 +85,15 @@ public class ProductController {
                     var desc = data[2];
                     var price = Double.parseDouble(data[3]);
                     var currency = data[4];
+                    var model = data[5];
+                    var memory = Integer.parseInt(data[6]);
 
                     var existing = products.findBySellerIdAndSku(user.getId(), sku).orElse(null);
                     if (existing == null) {
                         products.save(Product.builder()
                                 .sellerId(user.getId()).sku(sku).title(title)
                                 .description(desc).price(price).currency(currency)
-                                .updatedAt(OffsetDateTime.now())
+                                .updatedAt(OffsetDateTime.now()).model(model).memory(memory)
                                 .build());
                     } else {
                         existing.setTitle(title);
@@ -99,6 +101,8 @@ public class ProductController {
                         existing.setPrice(price);
                         existing.setCurrency(currency);
                         existing.setUpdatedAt(OffsetDateTime.now());
+                        existing.setModel(model);
+                        existing.setMemory(memory);
                         products.save(existing);
                     }
                     ok++;
