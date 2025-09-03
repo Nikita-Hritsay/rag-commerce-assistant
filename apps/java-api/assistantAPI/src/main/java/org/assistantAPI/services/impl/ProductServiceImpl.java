@@ -2,7 +2,6 @@ package org.assistantAPI.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.assistantAPI.domain.Product;
-import org.assistantAPI.dto.ChatUserMessage;
 import org.assistantAPI.dto.IntentDTO;
 import org.assistantAPI.repository.ProductRepo;
 import org.assistantAPI.services.ProductService;
@@ -17,6 +16,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findByUserMessage(IntentDTO intentDTO) {
-        return productRepo.search(intentDTO.model(), intentDTO.storage(), null, null);
+        return productRepo.search(null, null);
     }
 }

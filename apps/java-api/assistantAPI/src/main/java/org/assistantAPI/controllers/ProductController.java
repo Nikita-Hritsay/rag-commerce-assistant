@@ -81,28 +81,19 @@ public class ProductController {
                 try {
                     String[] data = r.values()[0].split(";");
                     var sku = data[0];
-                    var title = data[1];
-                    var desc = data[2];
                     var price = Double.parseDouble(data[3]);
                     var currency = data[4];
-                    var model = data[5];
-                    var memory = Integer.parseInt(data[6]);
 
                     var existing = products.findBySellerIdAndSku(user.getId(), sku).orElse(null);
                     if (existing == null) {
                         products.save(Product.builder()
-                                .sellerId(user.getId()).sku(sku).title(title)
-                                .description(desc).price(price).currency(currency)
-                                .updatedAt(OffsetDateTime.now()).model(model).memory(memory)
+                                .sellerId(user.getId()).sku(sku).price(price).currency(currency)
+                                .updatedAt(OffsetDateTime.now())
                                 .build());
                     } else {
-                        existing.setTitle(title);
-                        existing.setDescription(desc);
                         existing.setPrice(price);
                         existing.setCurrency(currency);
                         existing.setUpdatedAt(OffsetDateTime.now());
-                        existing.setModel(model);
-                        existing.setMemory(memory);
                         products.save(existing);
                     }
                     ok++;

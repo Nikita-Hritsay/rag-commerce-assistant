@@ -2,7 +2,11 @@ package org.assistantAPI.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity @Table(name="product",
@@ -15,13 +19,9 @@ public class Product {
     private Long sellerId;
 
     @Column(nullable=false) private String sku;
-    @Column(nullable=false) private String title;
-    @Column(columnDefinition="text") private String description;
     private Double price;
     private String currency;
     @Column(name="updated_at") private OffsetDateTime updatedAt;
-    private String model;
-    private int memory;
 
     private Integer quantity;
 
@@ -31,15 +31,16 @@ public class Product {
         if (updatedAt==null) updatedAt = OffsetDateTime.now();
     }
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> attributes;
+
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
                 ", sellerId=" + sellerId +
                 ", sku='" + sku + '\'' +
-                ", title='" + title + '\'' +
-                ", model='" + model + '\'' +
-                ", memory=" + memory +
                 ", price=" + price +
                 ", currency='" + currency + '\'' +
                 ", quantity=" + quantity +

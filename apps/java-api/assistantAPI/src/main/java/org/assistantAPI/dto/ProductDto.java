@@ -1,10 +1,11 @@
 package org.assistantAPI.dto;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 public record ProductDto(
-        UUID id, String sku, String title, String description,
+        UUID id, String sku,
         Double price, String currency, Integer quantity,
-        OffsetDateTime updatedAt
+        OffsetDateTime updatedAt, Map<String, Object> attributes
 ) {}
