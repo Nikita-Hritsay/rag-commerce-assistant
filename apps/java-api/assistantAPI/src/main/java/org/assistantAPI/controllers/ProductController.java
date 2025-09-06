@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -64,44 +65,101 @@ public class ProductController {
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<Map<String, Object>> importCsv(@RequestPart("file") MultipartFile file, Authentication authentication) throws IOException {
-        int ok = 0, failed = 0;
-        try (var reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-            String usernameOrEmail = authentication.getName();
-            User user = userService.findByEmail(usernameOrEmail);
+    @Transactional
+    public ResponseEntity<Map<String, Object>> importCsv(
+            @RequestPart("file") MultipartFile file,
+            Authentication authentication) throws IOException {
 
+        int ok = 0, failed = 0;
+        String userEmail = authentication.getName();
+        User user = userService.findByEmail(userEmail);
+
+        try (var reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             var csv = CSVFormat.DEFAULT.builder()
+                    .setDelimiter(';')
                     .setHeader()
                     .setSkipHeaderRecord(true)
                     .setTrim(true)
                     .build()
                     .parse(reader);
 
+            final List<String> headers = csv.getHeaderNames() != null ? csv.getHeaderNames() : List.of();
+
             for (CSVRecord r : csv) {
                 try {
-                    String[] data = r.values()[0].split(";");
-                    var sku = data[0];
-                    var price = Double.parseDouble(data[3]);
-                    var currency = data[4];
+                    String sku = r.get(0);
+                    Double price = parseDoubleSafe(r.get(1));
+                    String currency = r.get(2);
+                    Integer quantity = Integer.parseInt(r.get(3));
+
+                    Map<String,Object> attrs = new LinkedHashMap<>();
+                    for (int i = 4; i < r.size(); i++) {
+                        String key = (i < headers.size() && headers.get(i) != null && !headers.get(i).isBlank())
+                                ? headers.get(i).trim()
+                                : ("col" + (i+1));
+                        String raw = r.get(i);
+                        if (raw != null && !raw.isBlank())
+                            attrs.put(key, inferSimple(raw));
+                    }
 
                     var existing = products.findBySellerIdAndSku(user.getId(), sku).orElse(null);
                     if (existing == null) {
                         products.save(Product.builder()
-                                .sellerId(user.getId()).sku(sku).price(price).currency(currency)
+                                .id(UUID.randomUUID())
+                                .sellerId(user.getId())
+                                .sku(sku)
+                                .price(price)
+                                .currency(currency != null ? currency : "UAH")
+                                .quantity(quantity)
                                 .updatedAt(OffsetDateTime.now())
+                                .attributes(attrs)
                                 .build());
                     } else {
-                        existing.setPrice(price);
-                        existing.setCurrency(currency);
+                        if (price != null)
+                            existing.setPrice(price);
+                        if (currency != null && !currency.isBlank())
+                            existing.setCurrency(currency);
                         existing.setUpdatedAt(OffsetDateTime.now());
+                        existing.setQuantity(quantity);
+                        if (existing.getAttributes() == null)
+                            existing.setAttributes(new LinkedHashMap<>());
+                        existing.getAttributes().putAll(attrs);
                         products.save(existing);
                     }
                     ok++;
-                } catch (Exception ex) {
+                } catch (Exception e) {
                     failed++;
                 }
             }
         }
         return ResponseEntity.ok(Map.of("ok", ok, "failed", failed));
+    }
+
+    private static Double parseDoubleSafe(String s) {
+        if (s == null || s.isBlank())
+            return null;
+        try {
+            return Double.valueOf(s.replace(",", "."));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    private static Object inferSimple(String raw) {
+        String s = raw.trim();
+        if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false"))
+            return Boolean.valueOf(s);
+        if (s.matches("[-+]?\\d+"))
+            try {
+                return Integer.valueOf(s);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        if (s.matches("[-+]?\\d*([.,]\\d+)?"))
+            try {
+                return Double.valueOf(s.replace(",", "."));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        return s;
     }
 }
