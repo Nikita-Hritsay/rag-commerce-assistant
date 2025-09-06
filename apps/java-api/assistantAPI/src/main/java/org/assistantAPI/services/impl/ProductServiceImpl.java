@@ -16,6 +16,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findByUserMessage(IntentDTO intentDTO) {
-        return productRepo.search(null, null);
+        return productRepo.search(null,null,null,null,false,null,null,null,0, 0);
     }
 }

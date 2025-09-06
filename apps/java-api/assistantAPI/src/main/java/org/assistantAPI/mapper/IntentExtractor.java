@@ -18,7 +18,7 @@ public class IntentExtractor {
             String title = m.group(1).toLowerCase();
             String model = m.group(2);
             int storage = Integer.parseInt(m.group(3));
-            return new IntentDTO(title, model, storage);
+            return new IntentDTO(title, null,null, null,false,null,null,null,0, 0);
         }
         return null;
     }
